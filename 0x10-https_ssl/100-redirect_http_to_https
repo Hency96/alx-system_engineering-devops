@@ -1,0 +1,25 @@
+        errorfile 504 /etc/haproxy/errors/504.http
+
+# Frontend settings
+frontend teclosoft-tech-frontend
+        bind *:80
+        mode http
+        http-request redirect scheme https code 301 unless { ssl_fc }
+        http-request set-header X_Forwarded-Proto http
+        default_backend teclosoft-tech-backend
+
+frontend teclosoft-tech-frontend-https
+        bind *:443 ssl crt /etc/haproxy/certs/www.teclosoft.tech.pem
+        http-request set-header X-Forwarded-Proto https
+        default_backend teclosoft-tech-backend
+
+# Backend settings
+
+backend teclosoft-tech-backend
+        balance roundrobin
+        server 151666-web-01 34.207.211.26:80 check
+        server 151666-web-02 54.227.224.160:80 check
+
+
+
+"/etc/haproxy/haproxy.cfg" 59L, 1881C                                                    45,43-50      94%
